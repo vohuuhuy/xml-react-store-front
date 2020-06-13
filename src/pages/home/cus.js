@@ -1,23 +1,20 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import * as Icon from '@ant-design/icons'
 import { AgGridReact } from 'ag-grid-react'
-import { Modal, Button, Form, Input, Radio, notification } from 'antd'
-import { QUERY_FIND_ALL_USER, MUTATION_ADD_USER, MUTATION_UPDATE_USER, MUTATION_DELETE_USERS } from './gql'
+import { Modal, Button, Form, Input, notification, Radio } from 'antd'
+import { QUERY_FIND_ALL_CUS, MUTATION_ADD_CUS, MUTATION_UPDATE_CUS, MUTATION_DELETE_CUSS } from './gql'
 import { Client } from '../../config'
 import { useQuery } from '@apollo/react-hooks'
-import { Appcontext } from '../../App'
 
 let gridApi
 const { confirm } = Modal
 
-const User = props => {
-  const { data, refetch } = useQuery(QUERY_FIND_ALL_USER, { fetchPolicy: 'no-cache' })
+const Cus = () => {
+  const { data, refetch } = useQuery(QUERY_FIND_ALL_CUS, { fetchPolicy: 'no-cache' })
   const [visible, setVisible] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
 
-  const appContext = useContext(Appcontext)
-
-  const realData = data?.findAllUser ? JSON.parse(data?.findAllUser) || [] : []
+  const realData = data?.findAllCus ? JSON.parse(data?.findAllCus) || [] : []
 
   const [form] = Form.useForm()
 
@@ -31,7 +28,6 @@ const User = props => {
         })
         return
       }
-      console.log(selectedRows)
       form.setFieldsValue(selectedRows[0])
     } else {
       form.resetFields()
@@ -41,18 +37,11 @@ const User = props => {
   }
 
   const showModalDelete = () => {
-    const TaiKhoans = gridApi.getSelectedRows().map(row => row.TaiKhoan['$t']) || []
-    if (TaiKhoans.length === 0) {
+    const Mas = gridApi.getSelectedRows().map(row => row.MaKH['$t']) || []
+    if (Mas.length === 0) {
       notification.open({
         type: 'warning',
         message: 'Chọn ít nhất 1 để xóa',
-      })
-      return
-    }
-    if (TaiKhoans.includes(appContext?.NguoiDung?.TaiKhoan['$t'])) {
-      notification.open({
-        type: 'warning',
-        message: 'Tài khoản đang được dùng',
       })
       return
     }
@@ -61,12 +50,12 @@ const User = props => {
       content: 'Xác nhận xóa',
       onOk() {
         Client.mutate({
-          mutation: MUTATION_DELETE_USERS,
-          variables: { TaiKhoans }
+          mutation: MUTATION_DELETE_CUSS,
+          variables: { Mas }
         })
           .then(({ data }) => {
             notification.open({
-              message: data?.deleteUsers,
+              message: data?.deleteCuss,
             })
             refetch()
           })
@@ -80,29 +69,26 @@ const User = props => {
         const input = JSON.stringify(values)
         if (isEdit) {
           Client.mutate({
-            mutation: MUTATION_UPDATE_USER,
+            mutation: MUTATION_UPDATE_CUS,
             variables: {
               input
             }
           })
             .then(({ data }) => {
-              if (appContext?.NguoiDung?.TaiKhoan['$t'] === values.TaiKhoan['$t']) {
-                props.updateUser()
-              }
               notification.open({
-                message: data?.updateUser,
+                message: data?.updateCus,
               })
             })
         } else {
           Client.mutate({
-            mutation: MUTATION_ADD_USER,
+            mutation: MUTATION_ADD_CUS,
             variables: {
               input
             }
           })
             .then(({ data }) => {
               notification.open({
-                message: data?.addUser,
+                message: data?.addCus,
               })
             })
         }
@@ -128,15 +114,11 @@ const User = props => {
     colResizeDefault: 'shift',
     rowSelection: 'multiple',
     columnDefs: [
-      { headerName: 'Mã', field: 'MaND.$t' },
-      { headerName: 'Họ tên', field: 'HoTen.$t' },
-      { headerName: 'Tài khoản', field: 'TaiKhoan.$t' },
-      {
-        headerName: 'Chức vụ',
-        field: 'ChucVu.$t',
-        valueFormatter: i => i.value === 'QUAN_LY' ? 'Quản lý' : 'Nhân Viên'
-      },
-      { headerName: 'Số điện thoại', field: 'SDT.$t' },
+      { headerName: 'Mã khách hàng', field: 'MaKH.$t' },
+      { headerName: 'Tên khách hàng', field: 'HoTen.$t' },
+      { headerName: 'Email', field: 'Email.$t' },
+      { headerName: 'Số điện thoại', field: 'SoDienThoai.$t' },
+      { headerName: 'Ngày sinh', field: 'NgaySinh.$t' },
       { headerName: 'Địa chỉ', field: 'DiaChi.$t' }
     ],
     onGridReady: params => {
@@ -158,41 +140,34 @@ const User = props => {
         />
       </div>
       <Modal
-        title={`${isEdit ? 'Chỉnh sửa' : 'Thêm'} người dùng`}
+        title={`${isEdit ? 'Chỉnh sửa' : 'Thêm'} khách hàng`}
         visible={visible}
         onOk={handleOk}
         onCancel={handleCancel}
       >
         <Form
           form={form}
-          name="add-user"
+          name='add-Cus'
           initialValues={{
-            ChucVu: { '$t': 'NHAN_VIEN' },
             GioiTinh: { '$t': 'male' }
           }}
           layout='vertical'
         >
-          <Form.Item name={['HoTen', '$t']} label="Họ tên" rules={[{ required: true, message: 'Chưa nhập Họ tên' }]}>
+          { isEdit &&
+            <Form.Item name={['MaKH', '$t']}>
+              <Input disabled  />
+            </Form.Item>
+          }
+          <Form.Item name={['HoTen', '$t']} label='Tên khách hàng' rules={[{ required: true, message: 'Chưa nhập Tên khách hàng' }]}>
             <Input />
           </Form.Item>
-          <Form.Item name={['TaiKhoan', '$t']} label="Tài khoản" rules={[{ required: true, message: 'Chưa nhập tài khoản' }]}>
-            <Input disabled={isEdit} />
+          <Form.Item name={['Email', '$t']} label='Email'>
+            <Input />
           </Form.Item>
-          { !isEdit && (
-              <>
-                <Form.Item name={['MatKhau', '$t']} label="Mật khẩu" rules={[{ required: true, message: 'Chưa nhập mật khẩu' }]}>
-                  <Input.Password />
-                </Form.Item>
-                <Form.Item name={['ChucVu', '$t']} label="Chức vụ" rules={[{ required: true, message: 'Chưa chọn chức vụ' }]} className="collection-create-form_last-form-item">
-                  <Radio.Group>
-                    <Radio value="NHAN_VIEN">Nhân viên</Radio>
-                    <Radio value="QUAN_LY">Quản lý</Radio>
-                  </Radio.Group>
-                </Form.Item>
-              </>
-            )
-          }
-          <Form.Item name={['SDT', '$t']} label="Số điện thoại">
+          <Form.Item name={['SoDienThoai', '$t']} label='Số điện thoại'>
+            <Input />
+          </Form.Item>
+          <Form.Item name={['NgaySinh', '$t']} label='Ngày sinh'>
             <Input />
           </Form.Item>
           <Form.Item name={['GioiTinh', '$t']} label="Giới tính" className="collection-create-form_last-form-item">
@@ -210,4 +185,4 @@ const User = props => {
   )
 }
 
-export default User
+export default Cus

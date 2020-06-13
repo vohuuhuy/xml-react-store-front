@@ -3,12 +3,18 @@ import { useHistory } from 'react-router-dom'
 import { Layout, Menu, PageHeader, Button, Descriptions, Avatar, Popover, Drawer } from 'antd'
 import {
   HomeOutlined,
-  UserOutlined
+  UserOutlined,
+  BankOutlined,
+  UserSwitchOutlined,
+  CodeSandboxOutlined
 } from '@ant-design/icons'
 import './index.css'
 import { Appcontext } from '../../App'
 import EditInfo from './editInfo'
 import User from './user'
+import Manu from './manu'
+import Cus from './cus'
+import Model from './model'
 
 const { Content, Footer, Sider } = Layout
 
@@ -59,7 +65,9 @@ const Home = (props) => {
   const Body = pros => {
     if (menuSelected === 1) return (<>Demo</>)
     if (menuSelected === 2) return (<User updateUser={props.updateUser} />)
-    return 'Huy'
+    if (menuSelected === 3) return (<Manu />)
+    if (menuSelected === 4) return (<Cus />)
+    if (menuSelected === 5) return (<Model />)
   }
 
   const BodyDrawer = () => {
@@ -117,17 +125,12 @@ const Home = (props) => {
           <div className="logo" />
           <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} onOpenChange={key => setMenuSelected(key)}>
             <Menu.Item key="1" icon={<HomeOutlined />} onClick={() => setMenuSelected(1)}>Home</Menu.Item>
+            <Menu.Item disabled>Danh mục</Menu.Item>
             {appContext?.NguoiDung?.ChucVu["$t"] === "QUAN_LY" && <Menu.Item key="2" icon={<UserOutlined />} onClick={() => setMenuSelected(2)}>Người dùng</Menu.Item>}
-            {/* <Menu.Item key="3" icon={<UploadOutlined />}>
-              nav 3
-            </Menu.Item>
-            <Menu.Item key="4" icon={<BarChartOutlined />}>
-              nav 4
-            </Menu.Item>
-            <Menu.Item key="5" icon={<CloudOutlined />}>
-              nav 5
-            </Menu.Item>
-            <Menu.Item key="6" icon={<AppstoreOutlined />}>
+            <Menu.Item key="3" icon={<BankOutlined />} onClick={() => setMenuSelected(3)}>Nhà cung cấp</Menu.Item>
+            <Menu.Item key="4" icon={<UserSwitchOutlined />} onClick={() => setMenuSelected(4)}>Khách hàng</Menu.Item>
+            <Menu.Item key="5" icon={<CodeSandboxOutlined />} onClick={() => setMenuSelected(5)}>Mẫu hàng</Menu.Item>
+            {/* <Menu.Item key="6" icon={<AppstoreOutlined />}>
               nav 6
             </Menu.Item>
             <Menu.Item key="7" icon={<TeamOutlined />}>
