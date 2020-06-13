@@ -11,6 +11,8 @@ import { onError } from 'apollo-link-error'
 const httpLinkUri = process.env.REACT_APP_HTTP_END_POINT
 const wsLinkUri = process.env.REACT_APP_WS_END_POINT
 
+console.log(httpLinkUri)
+
 const httpLink = new HttpLink({
   uri: httpLinkUri
 })
