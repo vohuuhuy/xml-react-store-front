@@ -6,9 +6,11 @@ import {
   UserOutlined
 } from '@ant-design/icons'
 import './index.css'
-import { Appcontext } from '../../App';
+import { Appcontext } from '../../App'
+import EditInfo from './editInfo'
+import User from './user'
 
-const { Content, Footer, Sider } = Layout;
+const { Content, Footer, Sider } = Layout
 
 const Home = (props) => {
   const appContext = useContext(Appcontext)
@@ -19,12 +21,15 @@ const Home = (props) => {
   const [poAva, setPoAva] = useState(false)
   const [menuSelected, setMenuSelected] = useState(1)
   const [drawer, setDrawer] = useState(false)
+  const [bodyDrawer, setBodyDrawer] = useState('')
+
+  const refBodeDrawer = useRef()
 
   useEffect(() => {
     if (!appContext?.NguoiDung?.TaiKhoan && !localStorage.getItem('NguoiDung')) {
       history.push('/login')
     }
-  }, [])
+  }, [appContext, history])
 
   const  hidePove = () => setPoAva(false)
 
@@ -38,8 +43,10 @@ const Home = (props) => {
     drawerInfo.current = {
       title: 'Người dùng'
     }
+    setBodyDrawer('EditInfo')
     hidePove()
     showDrawer()
+
   }
 
   const content = (
@@ -50,8 +57,19 @@ const Home = (props) => {
     </div>
   )
   const Body = pros => {
-    if (menuSelected === 1) return 'Demo'
+    if (menuSelected === 1) return (<>Demo</>)
+    if (menuSelected === 2) return (<User updateUser={props.updateUser} />)
     return 'Huy'
+  }
+
+  const BodyDrawer = () => {
+    switch (bodyDrawer) {
+      case 'EditInfo': return (<EditInfo ref={refBodeDrawer} nguoiDung={appContext?.NguoiDung} updateUser={props.updateUser} />)
+    }
+  }
+
+  const saveDrawer = () => {
+    refBodeDrawer.current.save()
   }
 
   return (
@@ -66,7 +84,6 @@ const Home = (props) => {
             // <Button key="3">Operation</Button>,
             <Popover
               content={content}
-              title="Title"
               trigger="click"
               visible={poAva}
               onVisibleChange={handleVisibleChange}
@@ -99,8 +116,8 @@ const Home = (props) => {
         >
           <div className="logo" />
           <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} onOpenChange={key => setMenuSelected(key)}>
-            <Menu.Item key="1" icon={<HomeOutlined />}>Home</Menu.Item>
-            {/* <Menu.Item key="2" icon={<VideoCameraOutlined />}>nav 2</Menu.Item> */}
+            <Menu.Item key="1" icon={<HomeOutlined />} onClick={() => setMenuSelected(1)}>Home</Menu.Item>
+            {appContext?.NguoiDung?.ChucVu["$t"] === "QUAN_LY" && <Menu.Item key="2" icon={<UserOutlined />} onClick={() => setMenuSelected(2)}>Người dùng</Menu.Item>}
             {/* <Menu.Item key="3" icon={<UploadOutlined />}>
               nav 3
             </Menu.Item>
@@ -124,7 +141,7 @@ const Home = (props) => {
         <Layout className="site-layout" style={{ marginLeft: 200 }}>
           {/* <Header className="site-layout-background" style={{ padding: 0 }} /> */}
           <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
-            <div className="site-layout-background" style={{ padding: 24, textAlign: 'center' }}>
+            <div className="site-layout-background" style={{ padding: 24 }}>
               <Body { ...props } />
             </div>
           </Content>
@@ -133,7 +150,7 @@ const Home = (props) => {
       </Layout>
       <Drawer
         title={drawerInfo.current.title}
-        width={350}
+        width={Math.max(400, window.innerWidth / 3)}
         placement="right"
         closable={false}
         onClose={onCloseDrawer}
@@ -144,13 +161,11 @@ const Home = (props) => {
               textAlign: 'right',
             }}
           >
-            <Button onClick={onCloseDrawer} type="primary">Lưu</Button>
+            <Button onClick={saveDrawer} type="primary">Lưu</Button>
           </div>
         }
       >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <BodyDrawer />
       </Drawer>
     </>
   )

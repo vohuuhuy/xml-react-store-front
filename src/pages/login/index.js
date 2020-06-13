@@ -21,7 +21,8 @@ const Login = props => {
     if (!password) { return }
     Client.query({
       query: QUERY_LOGIN,
-      variables: { username, password }
+      variables: { username, password },
+      fetchPolicy: 'network-only'
     })
       .then(({ data: { login } }) => {
         if (login != null) {
