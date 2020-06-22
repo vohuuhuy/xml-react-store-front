@@ -6,7 +6,9 @@ import {
   UserOutlined,
   BankOutlined,
   UserSwitchOutlined,
-  CodeSandboxOutlined
+  CodeSandboxOutlined,
+  AppstoreAddOutlined,
+  ShoppingCartOutlined
 } from '@ant-design/icons'
 import './index.css'
 import { Appcontext } from '../../App'
@@ -15,6 +17,8 @@ import User from './user'
 import Manu from './manu'
 import Cus from './cus'
 import Model from './model'
+import Import from './import'
+import Sale from './sale'
 
 const { Content, Footer, Sider } = Layout
 
@@ -35,6 +39,14 @@ const Home = (props) => {
     if (!appContext?.NguoiDung?.TaiKhoan && !localStorage.getItem('NguoiDung')) {
       history.push('/login')
     }
+    const header = document.querySelector('#header')
+    const body = document.querySelector('#body')
+    const sider = document.querySelector('#sider')
+    let headerHeight = header.offsetHeight;
+    headerHeight += parseInt(window.getComputedStyle(header).getPropertyValue('margin-top'));
+    headerHeight += parseInt(window.getComputedStyle(header).getPropertyValue('margin-bottom'));
+    body.style.marginTop = headerHeight + 'px'
+    sider.style.paddingTop = headerHeight + 'px'
   }, [appContext, history])
 
   const  hidePove = () => setPoAva(false)
@@ -68,6 +80,8 @@ const Home = (props) => {
     if (menuSelected === 3) return (<Manu />)
     if (menuSelected === 4) return (<Cus />)
     if (menuSelected === 5) return (<Model />)
+    if (menuSelected === 6) return (<Import />)
+    if (menuSelected === 7) return (<Sale />)
   }
 
   const BodyDrawer = () => {
@@ -82,23 +96,23 @@ const Home = (props) => {
 
   return (
     <>
-      <div className="site-page-header-ghost-wrapper">
+      <div id='header' className='site-page-header-ghost-wrapper' style={{ position: 'fixed', zIndex: 1 }}>
         <PageHeader
           ghost={false}
           // onBack={() => window.history.back()}
-          title="Phần Mềm Quản Lý Tạp Hóa"
-          subTitle="59CNTT2"
+          title='Phần Mềm Quản Lý Tạp Hóa'
+          subTitle='59CNTT2'
           extra={[
-            // <Button key="3">Operation</Button>,
+            // <Button key='3'>Operation</Button>,
             <Popover
               content={content}
-              trigger="click"
+              trigger='click'
               visible={poAva}
               onVisibleChange={handleVisibleChange}
             >
               <Avatar icon={<UserOutlined />} style={{ backgroundColor: '#87d068' }} className='hoverPoniter' />
             </Popover>,
-            <Button key="1" type="primary" onClick={() => {
+            <Button key='1' type='primary' onClick={() => {
               localStorage.removeItem('NguoiDung')
               history.push('login')
             }}>
@@ -106,15 +120,16 @@ const Home = (props) => {
             </Button>,
           ]}
         >
-          <Descriptions size="small" column={3}>
-            <Descriptions.Item label="Tài Khoản">{ appContext?.NguoiDung?.TaiKhoan["$t"] }</Descriptions.Item>
-            <Descriptions.Item label="Chức vụ"><a>{ appContext?.NguoiDung?.ChucVu["$t"] === "QUAN_LY" ? "Quản lý" : "Nhân viên" }</a></Descriptions.Item>
-            <Descriptions.Item label="Họ Tên">{ appContext?.NguoiDung?.HoTen["$t"] }</Descriptions.Item>
+          <Descriptions size='small' column={3}>
+            <Descriptions.Item label='Tài Khoản'>{ appContext?.NguoiDung?.TaiKhoan['$t'] }</Descriptions.Item>
+            <Descriptions.Item label='Chức vụ'><a>{ appContext?.NguoiDung?.ChucVu['$t'] === 'QUAN_LY' ? 'Quản lý' : 'Nhân viên' }</a></Descriptions.Item>
+            <Descriptions.Item label='Họ Tên'>{ appContext?.NguoiDung?.HoTen['$t'] }</Descriptions.Item>
           </Descriptions>
         </PageHeader>
       </div>
       <Layout>
         <Sider
+          id='sider'
           style={{
             overflow: 'auto',
             height: '100vh',
@@ -122,29 +137,31 @@ const Home = (props) => {
             left: 0,
           }}
         >
-          <div className="logo" />
-          <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} onOpenChange={key => setMenuSelected(key)}>
-            <Menu.Item key="1" icon={<HomeOutlined />} onClick={() => setMenuSelected(1)}>Home</Menu.Item>
+          <div className='logo' />
+          <Menu theme='dark' mode='inline' defaultSelectedKeys={['1']} onOpenChange={key => setMenuSelected(key)}>
+            <Menu.Item key='1' icon={<HomeOutlined />} onClick={() => setMenuSelected(1)}>Home</Menu.Item>
+            <Menu.Item key='6' icon={<AppstoreAddOutlined />} onClick={() => setMenuSelected(6)}>Nhập hàng</Menu.Item>
+            <Menu.Item key='7' icon={<ShoppingCartOutlined />} onClick={() => setMenuSelected(7)}>Bán hàng</Menu.Item>
             <Menu.Item disabled>Danh mục</Menu.Item>
-            {appContext?.NguoiDung?.ChucVu["$t"] === "QUAN_LY" && <Menu.Item key="2" icon={<UserOutlined />} onClick={() => setMenuSelected(2)}>Người dùng</Menu.Item>}
-            <Menu.Item key="3" icon={<BankOutlined />} onClick={() => setMenuSelected(3)}>Nhà cung cấp</Menu.Item>
-            <Menu.Item key="4" icon={<UserSwitchOutlined />} onClick={() => setMenuSelected(4)}>Khách hàng</Menu.Item>
-            <Menu.Item key="5" icon={<CodeSandboxOutlined />} onClick={() => setMenuSelected(5)}>Mẫu hàng</Menu.Item>
-            {/* <Menu.Item key="6" icon={<AppstoreOutlined />}>
+            {appContext?.NguoiDung?.ChucVu['$t'] === 'QUAN_LY' && <Menu.Item key='2' icon={<UserOutlined />} onClick={() => setMenuSelected(2)}>Người dùng</Menu.Item>}
+            <Menu.Item key='3' icon={<BankOutlined />} onClick={() => setMenuSelected(3)}>Nhà cung cấp</Menu.Item>
+            <Menu.Item key='4' icon={<UserSwitchOutlined />} onClick={() => setMenuSelected(4)}>Khách hàng</Menu.Item>
+            <Menu.Item key='5' icon={<CodeSandboxOutlined />} onClick={() => setMenuSelected(5)}>Mẫu hàng</Menu.Item>
+            {/* <Menu.Item key='6' icon={<AppstoreOutlined />}>
               nav 6
             </Menu.Item>
-            <Menu.Item key="7" icon={<TeamOutlined />}>
+            <Menu.Item key='7' icon={<TeamOutlined />}>
               nav 7
             </Menu.Item>
-            <Menu.Item key="8" icon={<ShopOutlined />}>
+            <Menu.Item key='8' icon={<ShopOutlined />}>
               nav 8
             </Menu.Item> */}
           </Menu>
         </Sider>
-        <Layout className="site-layout" style={{ marginLeft: 200 }}>
-          {/* <Header className="site-layout-background" style={{ padding: 0 }} /> */}
+        <Layout id='body' className='site-layout' style={{ marginLeft: 200, zIndex: 0 }}>
+          {/* <Header className='site-layout-background' style={{ padding: 0 }} /> */}
           <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
-            <div className="site-layout-background" style={{ padding: 24 }}>
+            <div className='site-layout-background' style={{ padding: 24 }}>
               <Body { ...props } />
             </div>
           </Content>
@@ -154,7 +171,7 @@ const Home = (props) => {
       <Drawer
         title={drawerInfo.current.title}
         width={Math.max(400, window.innerWidth / 3)}
-        placement="right"
+        placement='right'
         closable={false}
         onClose={onCloseDrawer}
         visible={drawer}
@@ -164,7 +181,7 @@ const Home = (props) => {
               textAlign: 'right',
             }}
           >
-            <Button onClick={saveDrawer} type="primary">Lưu</Button>
+            <Button onClick={saveDrawer} type='primary'>Lưu</Button>
           </div>
         }
       >

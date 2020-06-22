@@ -33,3 +33,5 @@ export const checkTypeDevice = () => {
   if (isMobileTablet()) { return 'mobileTablet' }
   return 'desktop' // or laptop
 }
+
+export const numberWithCommas = x => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');

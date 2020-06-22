@@ -60,7 +60,7 @@ const Manu = () => {
             refetch()
           })
       }
-    });
+    })
   }
 
   const handleOk = async () => {

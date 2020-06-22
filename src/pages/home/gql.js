@@ -105,6 +105,28 @@ const QUERY_FIND_ALL_MODEL = gql`
   }
 `
 
+// import
+
+const QUERY_FIND_ALL_IMPORT = gql`
+  query findAllImport {
+    findAllImport
+  }
+`
+
+const CREATE_IMPORT = gql`
+  mutation createImport($import: String, $stocks: String, $newStocks: String) {
+    createImport(import: $import, stocks: $stocks, newStocks: $newStocks)
+  }
+`
+
+// stock
+
+const QUERY_FIND_ALL_STOCK = gql`
+  query findAllStock {
+    findAllStock
+  }
+`
+
 export {
   MUTATION_UPDATE_USER,
   QUERY_FIND_USER,
@@ -122,5 +144,8 @@ export {
   MUTATION_UPDATE_MODEL,
   MUTATION_ADD_MODEL,
   MUTATION_DELETE_MODELS,
-  QUERY_FIND_ALL_MODEL
+  QUERY_FIND_ALL_MODEL,
+  QUERY_FIND_ALL_IMPORT,
+  QUERY_FIND_ALL_STOCK,
+  CREATE_IMPORT
 }

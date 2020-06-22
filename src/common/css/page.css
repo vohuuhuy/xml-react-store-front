@@ -10,7 +10,6 @@ body {
   background-image: url('../../images/bgw.png');
   background-size: cover;
   background-repeat: no-repeat;
-  overflow: hidden;
 }
 .page-hide {
   transform: translateX(100%);
