@@ -114,8 +114,8 @@ const QUERY_FIND_ALL_IMPORT = gql`
 `
 
 const CREATE_IMPORT = gql`
-  mutation createImport($import: String, $stocks: String, $newStocks: String) {
-    createImport(import: $import, stocks: $stocks, newStocks: $newStocks)
+  mutation createImport($imp: String, $stocks: String, $newStocks: String) {
+    createImport(imp: $imp, stocks: $stocks, newStocks: $newStocks)
   }
 `
 

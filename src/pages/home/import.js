@@ -145,7 +145,7 @@ const Import = () => {
         Client.mutate({
           mutation: CREATE_IMPORT,
           variables: {
-            import: JSON.stringify({
+            imp: JSON.stringify({
               MaNCC: { $t: manuCode },
               NgayNhap: { $t: moment().format('YYYY-MM-DD') }
             }),
