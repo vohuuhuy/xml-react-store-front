@@ -123,6 +123,7 @@ const Cus = () => {
     ],
     onGridReady: params => {
       gridApi = params.api
+      gridApi.sizeColumnsToFit()
     }
   }
 

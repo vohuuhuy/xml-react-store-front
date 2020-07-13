@@ -127,6 +127,19 @@ const QUERY_FIND_ALL_STOCK = gql`
   }
 `
 
+// sale
+const QUERY_FIND_ALL_SALE = gql`
+  query findAllSale {
+    findAllSale
+  }
+`
+
+const CREATE_SALE = gql`
+  mutation createSale($sale: String, $stocks: String) {
+    createSale(sale: $sale, stocks: $stocks)
+  }
+`
+
 export {
   MUTATION_UPDATE_USER,
   QUERY_FIND_USER,
@@ -147,5 +160,7 @@ export {
   QUERY_FIND_ALL_MODEL,
   QUERY_FIND_ALL_IMPORT,
   QUERY_FIND_ALL_STOCK,
-  CREATE_IMPORT
+  CREATE_IMPORT,
+  QUERY_FIND_ALL_SALE,
+  CREATE_SALE
 }
