@@ -211,7 +211,7 @@ const Sale = () => {
         onChange={cusCode => setState({ ...state, cus: cuss.find(c => c.MaKH['$t'] === cusCode) })}
         style={{ marginBottom: 20, width: '100%' }}
       >
-        {cuss.map(cus => (
+        {cuss?.map(cus => (
           <Option key={cus.MaKH['$t']} value={cus.MaKH['$t']}>
             <Text style={{ color: 'rgb(166, 152, 172)' }}>{cus.MaKH['$t']} - </Text>
             <Text>{cus.HoTen['$t']}</Text>
