@@ -21,7 +21,8 @@ import {
   InputNumber,
   Input,
   Table,
-  Modal
+  Modal,
+  notification
 } from 'antd'
 import {
   SnippetsOutlined,
@@ -164,7 +165,14 @@ const Import = () => {
           }
         })
           .then(res => {
-            console.log(res?.data)
+            if (res?.data) {
+              notification.open({
+                type: 'info',
+                message: 'Duyệt đơn hàng thành công!',
+                placement: 'bottomLeft'
+              })
+              setState(initState)
+            }
           })
           .catch(error => console.log(error))
       },

@@ -36,6 +36,7 @@ let gridApi
 const Sale = () => {
   const { data, refetch } = useQuery(QUERY_FIND_ALL_SALE, { fetchPolicy: 'no-cache' })
   const realData = data?.findAllSale ? JSON.parse(data?.findAllSale) || [] : []
+  console.log(realData)
   const [state, setState] = useState(initState)
 
   const { cus, stock, discountType, stockSales, countStock, priceSale, discountValue, saleDate, visibleDrawer } = state
@@ -67,6 +68,7 @@ const Sale = () => {
       {
         headerName: 'Tổng đơn hàng',
         valueGetter: param => {
+          console.log(param.data)
           const totalDoc = param.data?.Hang?.reduce((total, h) => total + parseFloat(h.SoLuong['$t']) * parseFloat(h.GiaBan['$t']), 0)
           const totalHasDiscount = param.data.KieuGiamGia['$t'] === '%' ? totalDoc - (totalDoc * parseFloat(param.data.GiamGia['$t']) / 100) : totalDoc - parseFloat(param.data.GiamGia['$t'])
           return numberWithCommas(totalHasDiscount)
@@ -129,7 +131,6 @@ const Sale = () => {
 
   const verifySale = () => {
     const { cus, discountType, stockSales, saleDateString } = state
-    console.log(state)
     Client.mutate({
       mutation: CREATE_SALE,
       variables: {
